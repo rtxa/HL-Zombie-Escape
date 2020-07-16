@@ -1,0 +1,31 @@
+[en]
+CLASS_HUMAN	 		= Human
+CLASS_ZOMBIE		= Zombie
+TEAMNAME_HUMAN		= Human
+TEAMNAME_ZOMBIE 	= Zombie
+HUD_STATUS			= Name: %n^nHealth: %i^nArmor: %i^nClass: %l
+HUD_STATUS_SPEC		= Spectating: %n^nHealth: %i^nArmor: %i^nClass: %l
+HUD_SCORE           = [%d] Zombie VS Human [%d]
+ROUND_DRAW          = No one has won!
+ROUND_RESTART       = Round restarted!
+ROUND_MINPLAYERS 	= %i players are required to^n start a round.
+ESCAPE_SUCCESS      = Good job! Escape success!
+ESCAPE_FAIL         = Escape failed!
+RELEASE_COUNTDOWN   = Zombie(s) will be released in:^n%i second(s) !!!
+FIRST_ZMB_COUNTDOWN = First infection in %i second(s) !!!
+
+[es]
+CLASS_HUMAN	 		= Humano
+CLASS_ZOMBIE		= Zombi
+TEAMNAME_HUMAN	    = Humano
+TEAMNAME_ZOMBIE	    = Zombi
+HUD_STATUS			= Nombre: %n^Salud: %i^nArmadura: %i^nClase: %l
+HUD_STATUS_SPEC		= Siguiendo: %n^Salud: %i^nArmadura: %i^nClase: %l
+HUD_SCORE           = [%d] Zombi VS Humano [%d]
+ROUND_DRAW          = Nadie ha ganado!
+ROUND_RESTART       = Ronda reiniciada!
+ROUND_MINPLAYERS 	= Se requieren %i jugadores para^nempezar una ronda.
+ESCAPE_SUCCESS      = BIEN! Escape exitoso!
+ESCAPE_FAIL         = Escape fallido!
+RELEASE_COUNTDOWN   = El equipo ZOMBI sera liberado en:^n%i segundo(s) !!!
+FIRST_ZMB_COUNTDOWN = Primera infeccion en %i segundo(s) !!!
