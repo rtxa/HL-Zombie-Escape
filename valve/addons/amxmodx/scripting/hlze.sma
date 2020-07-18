@@ -190,7 +190,7 @@ public plugin_precache() {
     // human cvars
     g_pCvarHumanHealth = create_cvar("ze_human_health", "100");
     g_pCvarHumanArmour = create_cvar("ze_human_armour", "0");
-    g_pCvarHumanMaxSpeed = create_cvar("ze_human_maxspeed", "230.0");
+    g_pCvarHumanMaxSpeed = create_cvar("ze_human_maxspeed", "300.0");
     g_pCvarHumanKillFrags = create_cvar("ze_human_kill_frags", "3");
 }
 
@@ -576,6 +576,8 @@ SetHuman(id) {
     give_item(id, "weapon_crowbar");
     give_item(id, "weapon_357");
     give_item(id, "weapon_9mmAR");
+    give_item(id, "weapon_shotgun");
+    give_item(id, "weapon_crossbow");
     give_item(id, "ammo_ARgrenades");
 
     // avoid WeapPickUp messages
