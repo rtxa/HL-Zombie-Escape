@@ -626,11 +626,9 @@ public AddPointsToScore(team, value) {
     g_TeamScore[team - 1] += value;
 }
 
-// not functional until i find how to fix team score switching on change team
 stock UpdateTeamScore(id = 0) {
-    return id;
-    //hl_set_user_teamscore(id, GetTeamName(TEAM_HUMAN), GetTeamScore(TEAM_HUMAN));
-    //hl_set_user_teamscore(id, GetTeamName(TEAM_ZOMBIE), GetTeamScore(TEAM_ZOMBIE));
+    hl_set_user_teamscore(id, TEAM_HUMAN, GetTeamScore(TEAM_HUMAN));
+    hl_set_user_teamscore(id, TEAM_ZOMBIE, GetTeamScore(TEAM_ZOMBIE));
 }
 
 stock UpdateTeamNames(id = 0) {
