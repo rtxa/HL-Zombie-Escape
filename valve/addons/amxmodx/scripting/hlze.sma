@@ -204,8 +204,8 @@ public plugin_init() {
     register_clcmd("spectate", "OnCmdSpectate");
     register_forward(FM_ClientKill, "OnClientKill");
 
-    register_concmd("sv_restart", "OnCmdRestartGame");
-    register_concmd("sv_restartround", "OnCmdRestartRound");
+    register_concmd("sv_restart", "OnCmdRestartGame", ADMIN_KICK);
+    register_concmd("sv_restartround", "OnCmdRestartRound", ADMIN_KICK);
 
     // block zombies picking or using these objects
     RegisterHamList(Ham_Touch, WEAPONS_CLASSES, sizeof WEAPONS_CLASSES, "OnItemTouch");
