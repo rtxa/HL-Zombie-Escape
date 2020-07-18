@@ -61,7 +61,7 @@ public OnMsgAmmoX(mid,dest,id){
 	if (is_user_alive(id)) {
 		switch (ammoid) {
 			// for now, only some weapons will have unlimited ammo
-			case ammo_9mm, ammo_357, ammo_shotgun, ammo_rpg: {
+			case ammo_9mm, ammo_357, ammo_shotgun, ammo_rpg, ammo_crossbow: {
 				if (amount < get_max_ammo(ammoid)) {
                     set_ent_data(id, "CBasePlayer", "m_rgAmmo", get_max_ammo(ammoid), ammoid);
                     set_msg_arg_int(2, ARG_BYTE, get_max_ammo(ammoid));
