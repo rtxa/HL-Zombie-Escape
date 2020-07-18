@@ -128,6 +128,23 @@ new g_SprLaserDot;
 // hud handlers
 new g_ScoreHudSync;
 
+// cvars
+new g_pCvarReleaseTime;
+new g_pCvarFreezeTime;
+new g_pCvarRoundTime;
+new g_pCvarRoundEndDelay;
+new g_pCvarMinPlayers;
+
+new g_pCvarZombieHealth;
+new g_pCvarZombieGravity;
+new g_pCvarZombieMaxSpeed;
+new g_pCvarZombieInfectFrags;
+
+new g_pCvarHumanHealth;
+new g_pCvarHumanArmour;
+new g_pCvarHumanMaxSpeed;
+new g_pCvarHumanKillFrags;
+
 public plugin_precache() {
     // precache models from mp_teamlist
     PrecacheTeamList();
@@ -153,6 +170,28 @@ public plugin_precache() {
 
     g_SprLaserDot = precache_model("sprites/laserdot.spr");
     g_SprLgtning = precache_model("sprites/lgtning.spr");
+
+    // zombie escape version
+    create_cvar("ze_version", VERSION, FCVAR_SERVER);
+
+    // general cvars
+    g_pCvarReleaseTime = create_cvar("ze_release_time", "10");
+    g_pCvarFreezeTime = create_cvar("ze_freeze_time", "5");
+    g_pCvarRoundTime = create_cvar("ze_round_time", "300");
+    g_pCvarRoundEndDelay = create_cvar("ze_round_end_delay", "5.0");
+    g_pCvarMinPlayers = create_cvar("ze_minplayers", "2");
+
+    // zombie cvars
+    g_pCvarZombieGravity = create_cvar("ze_zombie_gravity", "0.8");
+    g_pCvarZombieMaxSpeed = create_cvar("ze_zombie_maxspeed", "300.0");
+    g_pCvarZombieHealth = create_cvar("ze_zombie_health", "5000");
+    g_pCvarZombieInfectFrags = create_cvar("ze_zombie_infect_frags", "1");
+
+    // human cvars
+    g_pCvarHumanHealth = create_cvar("ze_human_health", "100");
+    g_pCvarHumanArmour = create_cvar("ze_human_armour", "0");
+    g_pCvarHumanMaxSpeed = create_cvar("ze_human_maxspeed", "230.0");
+    g_pCvarHumanKillFrags = create_cvar("ze_human_kill_frags", "3");
 }
 
 public plugin_init() {
@@ -240,7 +279,7 @@ public OnPlayerTakeDamage(victim, inflictor, attacker, Float:damage, damagetype)
         make_deathmsg(attacker, victim, 0, "virus");
 
         // give points for infection and add death to victim
-        hl_set_user_frags(attacker, get_user_frags(attacker) + ZOMBIE_INFECTION_FRAGS);
+        hl_set_user_frags(attacker, get_user_frags(attacker) + get_pcvar_num(g_pCvarZombieInfectFrags));
         hl_set_user_deaths(victim, hl_get_user_deaths(victim) + 1);
         
         SetZombie(victim);
@@ -271,7 +310,7 @@ public OnPlayerKilled_Post(victim, attacker) {
     if (victim != attacker && IsPlayer(attacker)) {
         if (hl_get_user_team(victim) == TEAM_ZOMBIE && hl_get_user_team(attacker) == TEAM_HUMAN) {
             PlaySound(0, SND_ZMB_DEATH[random(sizeof SND_ZMB_DEATH)]);
-            hl_set_user_frags(attacker,  get_user_frags(attacker) + (HUMAN_KILL_FRAGS - 1));
+            hl_set_user_frags(attacker,  get_user_frags(attacker) + (get_pcvar_num(g_pCvarHumanKillFrags) - 1));
         }
     }
 
@@ -320,25 +359,26 @@ public RoundStart() {
         return;
     }
 
+    new plr;
+
     // not enough players to start a round, let them play around
-    if (numPlayers == 1) {
-        new player = players[0];
+    if (numPlayers < get_pcvar_num(g_pCvarMinPlayers)) {
+        for (new i; i < numPlayers; i++) {
+            plr = players[i];
 
-        if (hl_get_user_spectator(player))
-            hl_set_user_spectator(player, false);
+            if (hl_get_user_spectator(plr))
+                hl_set_user_spectator(plr, false);
 
-        if (hl_get_user_team(player) != TEAM_HUMAN) {
-            SetHuman(player);
+            if (hl_get_user_team(plr) != TEAM_HUMAN)
+                SetHuman(plr);
+
         }
-
-        client_print(player, print_center, "%l", "ROUND_MINPLAYERS", 2);
-        
+        client_print(0, print_center, "%l", "ROUND_MINPLAYERS", get_pcvar_num(g_pCvarMinPlayers));
         set_task(5.0, "RoundStart", TASK_ROUNDSTART);
         return;
     }
 
     // we have enough players, start a new round
-    new plr;
     for (new i; i < numPlayers; i++) {
         plr = players[i];
 
@@ -357,14 +397,14 @@ public RoundStart() {
 
     g_RoundStarted = true;
 
-    g_RoundTime = 300; // 5 minutes
+    g_RoundTime = get_pcvar_num(g_pCvarRoundTime); // 5 minutes
     StartRoundTimer();
 
     // restore all map stuff
     ResetMap();
     
     PlayMp3(0, MP3_READY);
-    g_FirstZombieTime = 5;
+    g_FirstZombieTime = get_pcvar_num(g_pCvarFreezeTime);
     FirstZombieCountDown();
 }
 
@@ -383,7 +423,7 @@ public FirstZombieCountDown() {
 
         client_print(0, print_center, "");
 
-        g_ReleaseZombieTime = 10;
+        g_ReleaseZombieTime = get_pcvar_num(g_pCvarReleaseTime);
         set_task(1.0, "ReleaseZombieCountDown", TASK_RELEASEZOMBIE);
         return;
     }
@@ -444,7 +484,7 @@ public RoundEnd() {
 
     UpdateTeamScore();
 
-    set_task(5.0, "RoundStart", TASK_ROUNDSTART);
+    set_task(get_pcvar_float(g_pCvarRoundEndDelay), "RoundStart", TASK_ROUNDSTART);
 }
 
 public RoundRestart() {
@@ -541,9 +581,9 @@ SetHuman(id) {
     // avoid WeapPickUp messages
     set_ent_data(id, "CBasePlayer", "m_fInitHUD", 1);
 
-    set_user_health(id, HUMAN_HEALTH);
-    set_user_armor(id, HUMAN_ARMOUR);
-    set_user_maxspeed(id, HUMAN_MAXSPEED);
+    set_user_health(id, get_pcvar_num(g_pCvarHumanHealth));
+    set_user_armor(id, get_pcvar_num(g_pCvarHumanArmour));
+    set_user_maxspeed(id, get_pcvar_float(g_pCvarHumanMaxSpeed));
 }
 
 SetZombie(id) {
@@ -552,11 +592,10 @@ SetZombie(id) {
 
     hl_strip_user_weapons(id);
     give_item(id, "weapon_crowbar");
-
-    set_user_health(id, ZOMBIE_HEALTH);
-    set_user_armor(id, ZOMBIE_ARMOUR);
-    set_user_gravity(id, ZOMBIE_GRAVITY);
-    set_user_maxspeed(id, ZOMBIE_MAXSPEED);
+    
+    set_user_health(id, get_pcvar_num(g_pCvarZombieHealth));
+    set_user_gravity(id, get_pcvar_float(g_pCvarZombieGravity));
+    set_user_maxspeed(id, get_pcvar_float(g_pCvarZombieMaxSpeed));
 
     // avoid WeapPickUp messages
     set_ent_data(id, "CBasePlayer", "m_fInitHUD", 1);
