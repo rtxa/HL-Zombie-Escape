@@ -96,19 +96,6 @@ new const SND_ZMB_COMING[][] = { "hlze/zombi_coming_1.wav", "hlze/zombi_coming_2
 new const SND_ZMB_DEATH[][] = { "hlze/zombi_death_01.wav", "hlze/zombi_death_02.wav" };
 new const SND_ZMB_HURT[][] = { "hlze/zombi_hurt_01.wav", "hlze/zombi_hurt_02.wav" };
 
-// ------------------------- Class atributtes --------------------------------
-
-#define HUMAN_MAXSPEED 230.0
-#define HUMAN_HEALTH 100
-#define HUMAN_ARMOUR 0
-#define HUMAN_KILL_FRAGS 1
-
-#define ZOMBIE_MAXSPEED 300.0
-#define ZOMBIE_HEALTH 5000
-#define ZOMBIE_ARMOUR 0
-#define ZOMBIE_GRAVITY 0.8
-#define ZOMBIE_INFECTION_FRAGS 1
-
 // ------------------------ Vars ---------------------------------------------
 
 new g_TeamScore[HL_MAX_TEAMS];
@@ -175,10 +162,10 @@ public plugin_precache() {
     create_cvar("ze_version", VERSION, FCVAR_SERVER);
 
     // general cvars
-    g_pCvarReleaseTime = create_cvar("ze_release_time", "10");
+    g_pCvarReleaseTime = create_cvar("ze_release_time", "15");
     g_pCvarFreezeTime = create_cvar("ze_freeze_time", "5");
     g_pCvarRoundTime = create_cvar("ze_round_time", "300");
-    g_pCvarRoundEndDelay = create_cvar("ze_round_end_delay", "5.0");
+    g_pCvarRoundEndDelay = create_cvar("ze_round_end_delay", "6.0");
     g_pCvarMinPlayers = create_cvar("ze_minplayers", "2");
 
     // zombie cvars
@@ -188,7 +175,7 @@ public plugin_precache() {
     g_pCvarZombieInfectFrags = create_cvar("ze_zombie_infect_frags", "1");
 
     // human cvars
-    g_pCvarHumanHealth = create_cvar("ze_human_health", "100");
+    g_pCvarHumanHealth = create_cvar("ze_human_health", "150");
     g_pCvarHumanArmour = create_cvar("ze_human_armour", "0");
     g_pCvarHumanMaxSpeed = create_cvar("ze_human_maxspeed", "300.0");
     g_pCvarHumanKillFrags = create_cvar("ze_human_kill_frags", "3");
@@ -405,7 +392,7 @@ public RoundStart() {
     
     PlayMp3(0, MP3_READY);
     g_FirstZombieTime = get_pcvar_num(g_pCvarFreezeTime);
-    FirstZombieCountDown();
+    set_task(1.0, "FirstZombieCountDown", TASK_FIRSTZOMBIE);
 }
 
 public FirstZombieCountDown() {
