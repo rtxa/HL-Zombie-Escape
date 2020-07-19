@@ -11,7 +11,7 @@
 #include <hlze_const>
 
 #define PLUGIN "HL Zombie Escape"
-#define VERSION "0.1"
+#define VERSION "0.2"
 #define AUTHOR "rtxA"
 
 #pragma semicolon 1
