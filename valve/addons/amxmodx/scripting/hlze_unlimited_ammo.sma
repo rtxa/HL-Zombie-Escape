@@ -3,7 +3,7 @@
 #include <hlstocks>
 
 #define PLUGIN "HL:ZE - Unlimited Ammo"
-#define VERSION "0.1"
+#define VERSION "0.2"
 #define AUTHOR "rtxA | Dr.Freeman"
 
 enum {
